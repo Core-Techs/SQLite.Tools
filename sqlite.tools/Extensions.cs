@@ -18,7 +18,9 @@ namespace SQLite.Tools
         public static string ReadText(this IEnumerable<byte> bytes, Encoding encoding = null)
         {
             using (var stream = bytes.ToMemoryStream())
-            using (var reader = encoding == null ? new StreamReader(stream) : new StreamReader(stream, encoding))
+            using (var reader = encoding == null 
+                ? new StreamReader(stream) 
+                : new StreamReader(stream, encoding))
                 return reader.ReadToEnd();
         }
 
