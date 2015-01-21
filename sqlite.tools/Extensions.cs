@@ -15,7 +15,7 @@ namespace SQLite.Tools
 {
     public static class Extensions
     {
-        public static string ReadText(this IEnumerable<byte> bytes, Encoding encoding = null)
+        internal static string ReadText(this IEnumerable<byte> bytes, Encoding encoding = null)
         {
             using (var stream = bytes.ToMemoryStream())
             using (var reader = encoding == null 
@@ -24,13 +24,13 @@ namespace SQLite.Tools
                 return reader.ReadToEnd();
         }
 
-        public static byte[] GetEmbeddedResource(this Assembly assembly, string name)
+        internal static byte[] GetEmbeddedResource(this Assembly assembly, string name)
         {
             using (var stream = assembly.GetManifestResourceStream(name))
                 return stream.EnumerateBytes().ToArray();
         }
 
-        public static string[] GetEmbeddedResourceNames(this Type type)
+        internal static string[] GetEmbeddedResourceNames(this Type type)
         {
             var ns = type.Namespace + ".";
             var names = type.Assembly.GetManifestResourceNames().Where(x => x.StartsWith(ns));
