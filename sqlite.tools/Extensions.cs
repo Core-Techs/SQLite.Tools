@@ -13,7 +13,7 @@ using UniqueNamespace;
 
 namespace SQLite.Tools
 {
-    internal static class Extensions
+    public static class Extensions
     {
         public static string ReadText(this IEnumerable<byte> bytes, Encoding encoding = null)
         {
