@@ -3,20 +3,13 @@ using SQLite.Tools;
 
 namespace SQLite.Demo.CRUD
 {
-    public class User : ISQLiteReadFrom, ISQLiteWriteTo
+    public class User : ISQLiteEntity
     {
         public const string TableName = "Users";
         public const string ViewName = "UsersView";
 
-        string ISQLiteReadFrom.Table
-        {
-            get { return ViewName; }
-        }
-
-        string ISQLiteWriteTo.Table
-        {
-            get { return TableName; }
-        }
+        public string ReadSource { get { return ViewName; } }
+        public string WriteDestination { get { return TableName; } }
 
         public int Id { get; set; }
 

@@ -2,6 +2,6 @@
 {
     public interface ISQLiteReadFrom
     {
-        string Table { get; }
+        string ReadSource { get; }
     }
 }

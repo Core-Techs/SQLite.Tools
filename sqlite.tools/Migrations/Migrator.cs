@@ -146,7 +146,7 @@ namespace SQLite.Tools.Migrations
         private void RecordMigration(SQLiteConnection conn, Migration migration, bool up = true)
         {
             // delete from migration table where version matches
-            conn.DeleteAsync(new { migration.Version }, Migration.Table).Wait();
+            conn.DeleteAsync(new { migration.Version }, Migration.TableName).Wait();
             migration.Ran = DateTime.Now;
 
             var error = !migration.Error.IsNullOrEmpty();

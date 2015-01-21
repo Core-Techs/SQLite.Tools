@@ -4,11 +4,19 @@ using CoreTechs.Common;
 
 namespace SQLite.Tools
 {
-    public class Migration : ISQLiteReadFrom, ISQLiteWriteTo
+    public class Migration : ISQLiteEntity
     {
-        public const string Table = "Migrations";
-        string ISQLiteReadFrom.Table { get { return Table; } }
-        string ISQLiteWriteTo.Table { get { return Table; } }
+        public const string TableName = "Migrations";
+
+        public string ReadSource
+        {
+            get { return TableName; }
+        }
+
+        public string WriteDestination
+        {
+            get { return TableName; }
+        }
 
         public decimal Version { get; set; }
         public string Name { get; set; }

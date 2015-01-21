@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColumnPropertyPair.cs" />
+    <Compile Include="ISQLiteEntity.cs" />
     <Compile Include="PagingInfo.cs" />
     <Compile Include="PreparedQuery.cs" />
     <Compile Include="PreparedStatement.cs" />

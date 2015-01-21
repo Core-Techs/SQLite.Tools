@@ -51,7 +51,7 @@ namespace SQLite.Tools
 
         public static Task UpdateAsync(this SQLiteConnection conn, ISQLiteWriteTo obj)
         {
-            return UpdateAsync(conn, obj, obj.Table);
+            return UpdateAsync(conn, obj, obj.WriteDestination);
         }
 
         public static Task UpdateAsync(this SQLiteConnection conn, object obj, string table)
@@ -87,7 +87,7 @@ namespace SQLite.Tools
 
         public static Task DeleteAsync(this SQLiteConnection conn, ISQLiteWriteTo obj)
         {
-            return DeleteAsync(conn, obj, obj.Table);
+            return DeleteAsync(conn, obj, obj.WriteDestination);
         }
 
         public static Task DeleteAsync(this SQLiteConnection conn, object obj, string table)
@@ -127,7 +127,7 @@ namespace SQLite.Tools
 
         public static Task InsertAsync(this SQLiteConnection conn, ISQLiteWriteTo obj)
         {
-            return InsertAsync(conn, obj, obj.Table);
+            return InsertAsync(conn, obj, obj.WriteDestination);
         }
 
         public static async Task InsertAsync(this SQLiteConnection conn, object obj, string table)
@@ -173,7 +173,7 @@ namespace SQLite.Tools
         public static Task<IEnumerable<T>> SelectAsync<T>(this SQLiteConnection conn, object obj)
             where T : class, ISQLiteReadFrom, new()
         {
-            return SelectAsync<T>(conn, obj, new T().Table);
+            return SelectAsync<T>(conn, obj, new T().ReadSource);
         }
 
         public static Task<IEnumerable<T>> SelectAsync<T>(this SQLiteConnection conn)

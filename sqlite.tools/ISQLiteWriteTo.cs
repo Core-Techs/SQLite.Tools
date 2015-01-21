@@ -2,6 +2,6 @@
 {
     public interface ISQLiteWriteTo
     {
-        string Table { get; }
+        string WriteDestination { get; }
     }
 }
