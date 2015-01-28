@@ -1,8 +1,8 @@
 ﻿using System;
 using CoreTechs.Common.Database;
+using CoreTechs.SQLite.Tools;
 using NUnit.Framework;
 using SQLite.Demo.GetStarted;
-using SQLite.Tools;
 
 namespace SQLite.Demo.CRUD
 {

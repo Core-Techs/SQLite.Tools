@@ -31,8 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CoreTechs.Common">
-      <HintPath>..\packages\CoreTechs.Common.13.0.0\lib\net45\CoreTechs.Common.dll</HintPath>
+    <Reference Include="CoreTechs.Common, Version=13.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\CoreTechs.Common.13.0.3\lib\net45\CoreTechs.Common.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
@@ -66,9 +67,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\sqlite.tools\SQLite.Tools.csproj">
+    <ProjectReference Include="..\CoreTechs.SQLite.Tools\CoreTechs.SQLite.Tools.csproj">
       <Project>{bbbc5003-dd29-42e8-afff-6e40b74eca17}</Project>
-      <Name>SQLite.Tools</Name>
+      <Name>CoreTechs.SQLite.Tools</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

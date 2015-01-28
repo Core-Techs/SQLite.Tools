@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SQLite.Tools
+namespace CoreTechs.SQLite.Tools
 {
     public class PagingInfo
     {

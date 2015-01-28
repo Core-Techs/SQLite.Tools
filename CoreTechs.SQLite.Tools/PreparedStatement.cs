@@ -2,7 +2,7 @@
 using System.Data.SQLite;
 using System.Linq;
 
-namespace SQLite.Tools
+namespace CoreTechs.SQLite.Tools
 {
     public class PreparedStatement
     {

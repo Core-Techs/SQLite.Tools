@@ -1,5 +1,5 @@
 using System;
-using SQLite.Tools;
+using CoreTechs.SQLite.Tools;
 
 namespace SQLite.Demo.CRUD
 {

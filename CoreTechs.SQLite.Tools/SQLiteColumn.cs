@@ -2,7 +2,7 @@
 using System.Data;
 using CoreTechs.Common.Database;
 
-namespace SQLite.Tools
+namespace CoreTechs.SQLite.Tools
 {
     public class SQLiteColumn
     {

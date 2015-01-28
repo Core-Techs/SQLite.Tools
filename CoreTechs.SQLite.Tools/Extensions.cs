@@ -11,7 +11,7 @@ using CoreTechs.Common;
 using CoreTechs.Common.Database;
 using UniqueNamespace;
 
-namespace SQLite.Tools
+namespace CoreTechs.SQLite.Tools
 {
     public static class Extensions
     {

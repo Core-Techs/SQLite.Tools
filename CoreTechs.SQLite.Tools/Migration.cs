@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using CoreTechs.Common;
 
-namespace SQLite.Tools
+namespace CoreTechs.SQLite.Tools
 {
     public class Migration : ISQLiteEntity
     {

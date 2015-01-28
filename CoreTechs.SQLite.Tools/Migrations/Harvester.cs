@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 
-namespace SQLite.Tools.Migrations
+namespace CoreTechs.SQLite.Tools.Migrations
 {
     public static class Harvester
     {

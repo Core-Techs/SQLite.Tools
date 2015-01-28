@@ -1,6 +1,6 @@
-﻿using NUnit.Framework;
+﻿using CoreTechs.SQLite.Tools.Migrations;
+using NUnit.Framework;
 using SQLite.Demo.GetStarted;
-using SQLite.Tools.Migrations;
 
 namespace SQLite.Demo.Migrations
 {

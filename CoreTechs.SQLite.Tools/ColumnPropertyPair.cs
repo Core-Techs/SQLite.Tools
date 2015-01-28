@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace SQLite.Tools
+namespace CoreTechs.SQLite.Tools
 {
     public class ColumnPropertyPair
     {

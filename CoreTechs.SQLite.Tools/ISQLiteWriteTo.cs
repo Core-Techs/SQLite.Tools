@@ -1,4 +1,4 @@
-﻿namespace SQLite.Tools
+﻿namespace CoreTechs.SQLite.Tools
 {
     public interface ISQLiteWriteTo
     {

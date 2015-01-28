@@ -7,8 +7,8 @@
     <ProjectGuid>{BBBC5003-DD29-42E8-AFFF-6E40B74ECA17}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SQLite.Tools</RootNamespace>
-    <AssemblyName>SQLite.Tools</AssemblyName>
+    <RootNamespace>CoreTechs.SQLite.Tools</RootNamespace>
+    <AssemblyName>CoreTechs.SQLite.Tools</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>ae550391</NuGetPackageImportStamp>
@@ -31,8 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CoreTechs.Common">
-      <HintPath>..\packages\CoreTechs.Common.13.0.0\lib\net45\CoreTechs.Common.dll</HintPath>
+    <Reference Include="CoreTechs.Common, Version=13.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\CoreTechs.Common.13.0.3\lib\net45\CoreTechs.Common.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

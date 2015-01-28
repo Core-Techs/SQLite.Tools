@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLite.Demo", "sqlite demo\SQLite.Demo.csproj", "{C2E1B870-4FAF-4A72-AE9B-255A12A107A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLite.Tools", "sqlite.tools\SQLite.Tools.csproj", "{BBBC5003-DD29-42E8-AFFF-6E40B74ECA17}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTechs.SQLite.Tools", "CoreTechs.SQLite.Tools\CoreTechs.SQLite.Tools.csproj", "{BBBC5003-DD29-42E8-AFFF-6E40B74ECA17}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

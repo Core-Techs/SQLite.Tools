@@ -10,7 +10,7 @@ using CoreTechs.Common;
 using CoreTechs.Common.Database;
 using CoreTechs.Common.Reflection;
 
-namespace SQLite.Tools
+namespace CoreTechs.SQLite.Tools
 {
     public static class SQLiteExtensions
     {

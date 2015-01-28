@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using CoreTechs.Common;
 using CoreTechs.Common.Database;
 
-namespace SQLite.Tools.Migrations
+namespace CoreTechs.SQLite.Tools.Migrations
 {
     /// <summary>
     /// Executues migrations on a database.

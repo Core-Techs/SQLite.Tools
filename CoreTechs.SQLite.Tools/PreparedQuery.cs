@@ -3,7 +3,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.Threading.Tasks;
 
-namespace SQLite.Tools
+namespace CoreTechs.SQLite.Tools
 {
     /// <summary>
     /// Encapsulates a sql statement and logic used to transform results into an object graph.
