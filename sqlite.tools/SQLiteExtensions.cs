@@ -49,12 +49,57 @@ namespace SQLite.Tools
             return new SQLiteParameter(name, obj);
         }
 
+        #region Update Asynchronous
+
         public static Task UpdateAsync(this SQLiteConnection conn, ISQLiteWriteTo obj)
         {
             return UpdateAsync(conn, obj, obj.WriteDestination);
         }
 
+        public static Task UpdateAsync<T>(this SQLiteConnection conn, object obj)
+            where T : ISQLiteWriteTo, new()
+        {
+            return UpdateAsync(conn, obj, new T().WriteDestination);
+        }
+
         public static Task UpdateAsync(this SQLiteConnection conn, object obj, string table)
+        {
+            if (obj == null) throw new ArgumentNullException("obj");
+            string sqlString; SQLiteParameter[] parameters;
+
+            CreateSqlAndParametersForUpdate(conn, obj, table, out sqlString, out parameters);
+            return conn.ExecuteSqlAsync(sqlString, parameters);
+        }
+
+        #endregion Update Asynchronous
+
+        #region Update Synchronous
+
+        public static void Update(this SQLiteConnection conn, ISQLiteWriteTo obj)
+        {
+            Update(conn, obj, obj.WriteDestination);
+        }
+
+        public static void Update<T>(this SQLiteConnection conn, object obj)
+            where T : ISQLiteWriteTo, new()
+        {
+            UpdateAsync(conn, obj, new T().WriteDestination);
+        }
+
+        public static void Update(this SQLiteConnection conn, object obj, string table)
+        {
+            if (obj == null) throw new ArgumentNullException("obj");
+            string sqlString; SQLiteParameter[] parameters;
+
+            CreateSqlAndParametersForUpdate(conn, obj, table, out sqlString, out parameters);
+            conn.ExecuteSql(sqlString, parameters);
+        }
+
+        #endregion Update Synchronous
+
+        private static void CreateSqlAndParametersForUpdate(
+            SQLiteConnection conn, object obj, string table,
+            out string sqlString, out SQLiteParameter[] parameters)
         {
             if (obj == null) throw new ArgumentNullException("obj");
 
@@ -81,9 +126,11 @@ namespace SQLite.Tools
             if (!predicate.IsNullOrWhiteSpace())
                 sql += "WHERE " + predicate;
 
-            var parameters = data.Select(x => x.param).ToArray();
-            return conn.ExecuteSqlAsync(sql, parameters);
+            parameters = data.Select(x => x.param).ToArray();
+            sqlString = sql;
         }
+
+        #region Delete Asynchronous
 
         public static Task DeleteAsync(this SQLiteConnection conn, ISQLiteWriteTo obj)
         {
@@ -91,6 +138,37 @@ namespace SQLite.Tools
         }
 
         public static Task DeleteAsync(this SQLiteConnection conn, object obj, string table)
+        {
+            if (obj == null) throw new ArgumentNullException("obj");
+            string sqlString; SQLiteParameter[] parameters;
+
+            CreateSqlAndParametersForDelete(conn, obj, table, out sqlString, out parameters);
+            return conn.ExecuteSqlAsync(sqlString, parameters);
+        }
+
+        #endregion Delete Asynchronous
+
+        #region Delete Synchronous
+
+        public static void Delete(this SQLiteConnection conn, ISQLiteWriteTo obj)
+        {
+            Delete(conn, obj, obj.WriteDestination);
+        }
+
+        public static void Delete(this SQLiteConnection conn, object obj, string table)
+        {
+            if (obj == null) throw new ArgumentNullException("obj");
+            string sqlString; SQLiteParameter[] parameters;
+
+            CreateSqlAndParametersForDelete(conn, obj, table, out sqlString, out parameters);
+            conn.ExecuteSql(sqlString, parameters);
+        }
+
+        #endregion Delete Synchronous
+
+        public static void CreateSqlAndParametersForDelete(
+            SQLiteConnection conn, object obj, string table,
+            out string sqlString, out SQLiteParameter[] parameters)
         {
             if (obj == null) throw new ArgumentNullException("obj");
 
@@ -121,9 +199,18 @@ namespace SQLite.Tools
             if (!predicate.IsNullOrWhiteSpace())
                 sql += string.Format(" WHERE {0}", predicate);
 
-            var parameters = data.Select(x => x.param).ToArray();
-            return conn.ExecuteSqlAsync(sql, parameters);
+            parameters = data.Select(x => x.param).ToArray();
+            sqlString = sql;
         }
+
+        private class InsertionData
+        {
+            public bool DefaultRowId { get; set; }
+            public ColumnPropertyPair Pair { get; set; }
+            public SQLiteParameter Param { get; set; }
+        }
+
+        #region Insert Asynchronous
 
         public static Task InsertAsync(this SQLiteConnection conn, ISQLiteWriteTo obj)
         {
@@ -133,42 +220,88 @@ namespace SQLite.Tools
         public static async Task InsertAsync(this SQLiteConnection conn, object obj, string table)
         {
             if (obj == null) throw new ArgumentNullException("obj");
+            InsertionData[] data;
+            string sqlString;
+            SQLiteParameter[] parameters;
 
-            var data = (from pair in GetColumnPropertyPairs(conn, table, obj.GetType())
+            CreateSqlAndParametersForInsert(conn, obj, table,
+                out data, out sqlString, out parameters);
+
+            using (await conn.ConnectAsync())
+            {
+                await conn.ExecuteSqlAsync(sqlString, parameters);
+
+                data.Where(x => x.DefaultRowId)
+                    .ForEach(
+                        x => x.Pair.Property.SetValue(obj, conn.LastInsertRowId.ConvertTo(x.Pair.Property.PropertyType)));
+            }
+        }
+
+        #endregion Insert Asynchronous
+
+        #region Insert Synchronous
+
+        public static void Insert(this SQLiteConnection conn, ISQLiteWriteTo obj)
+        {
+            Insert(conn, obj, obj.WriteDestination);
+        }
+
+        public static void Insert(this SQLiteConnection conn, object obj, string table)
+        {
+            if (obj == null) throw new ArgumentNullException("obj");
+            InsertionData[] data;
+            string sqlString;
+            SQLiteParameter[] parameters;
+
+            CreateSqlAndParametersForInsert(conn, obj, table,
+                out data, out sqlString, out parameters);
+
+            using (conn.Connect())
+            {
+                conn.ExecuteSql(sqlString, parameters);
+
+                data.Where(x => x.DefaultRowId)
+                    .ForEach(
+                        x => x.Pair.Property.SetValue(obj, conn.LastInsertRowId.ConvertTo(x.Pair.Property.PropertyType)));
+            }
+        }
+
+        #endregion Insert Synchronous
+
+        private static void CreateSqlAndParametersForInsert(
+            SQLiteConnection conn, object obj, string table,
+            out InsertionData[] data,
+            out string sqlString, out SQLiteParameter[] parameters)
+        {
+            if (obj == null) throw new ArgumentNullException("obj");
+
+            data = (from pair in GetColumnPropertyPairs(conn, table, obj.GetType())
                         where pair.Property.CanRead
                         let value = pair.Property.GetValue(obj)
 
                         // dont insert rowid value if value is null or zero
                         let defaultRowId = pair.Column.RowId && (ReferenceEquals(value, null) || value.Equals(0))
                         let param = value.AsSQLiteParam(pair.ParameterName)
-                        select new
+                        select new InsertionData
                         {
-                            defaultRowId,
-                            pair,
-                            param
+                            DefaultRowId = defaultRowId,
+                            Pair = pair,
+                            Param = param,
                         }).ToArray();
 
             if (!data.Any())
                 throw new DataException("There are no matching column name for the properties of type " + obj.GetType());
 
 
-            var paramData = data.WhereNot(x => x.defaultRowId).ToArray();
-            var columns = paramData.Select(x => string.Format("\"{0}\"", x.pair.Column.Name)).Join(", ");
-            var values = paramData.Select(x => x.param.ParameterName).Join(", ");
+            var paramData = data.WhereNot(x => x.DefaultRowId).ToArray();
+            var columns = paramData.Select(x => string.Format("\"{0}\"", x.Pair.Column.Name)).Join(", ");
+            var values = paramData.Select(x => x.Param.ParameterName).Join(", ");
 
-            var sql = string.Format("INSERT INTO \"{0}\" ({1}) VALUES ({2})", table, columns, values);
-
-            var parameters = data.Select(x => x.param).ToArray();
-
-            using (await conn.ConnectAsync())
-            {
-                await conn.ExecuteSqlAsync(sql, parameters);
-
-                data.Where(x => x.defaultRowId)
-                    .ForEach(
-                        x => x.pair.Property.SetValue(obj, conn.LastInsertRowId.ConvertTo(x.pair.Property.PropertyType)));
-            }
+            sqlString = string.Format("INSERT INTO \"{0}\" ({1}) VALUES ({2})", table, columns, values);
+            parameters = data.Select(x => x.Param).ToArray();
         }
+
+        #region Select Asynchronous
 
         public static Task<IEnumerable<T>> SelectAsync<T>(this SQLiteConnection conn, object obj)
             where T : class, ISQLiteReadFrom, new()
@@ -189,6 +322,55 @@ namespace SQLite.Tools
         }
 
         public static async Task<IEnumerable<T>> SelectAsync<T>(this SQLiteConnection conn, object obj, string table) where T : class, new()
+        {
+            if (obj == null) throw new ArgumentNullException("obj");
+            string sqlString; SQLiteParameter[] parameters;
+
+            CreateSqlAndParametersForSelect(conn, obj, table, out sqlString, out parameters);
+            var results = await conn.QuerySqlAsync(sqlString, parameters);
+
+            return results.AsEnumerable<T>();
+        }
+
+        #endregion Select Asynchronous
+
+        #region Select Synchronous
+
+        public static IEnumerable<T> Select<T>(this SQLiteConnection conn, object obj)
+            where T : class, ISQLiteReadFrom, new()
+        {
+            return Select<T>(conn, obj, new T().ReadSource);
+        }
+
+        public static IEnumerable<T> Select<T>(this SQLiteConnection conn)
+            where T : class, ISQLiteReadFrom, new()
+        {
+            return Select<T>(conn, new { });
+        }
+
+        public static IEnumerable<T> Select<T>(this SQLiteConnection conn, string table)
+            where T : class, ISQLiteReadFrom, new()
+        {
+            return Select<T>(conn, new {}, table);
+        }
+
+        public static IEnumerable<T> Select<T>(this SQLiteConnection conn, object obj, string table)
+            where T : class, new()
+        {
+            if (obj == null) throw new ArgumentNullException("obj");
+            string sqlString; SQLiteParameter[] parameters;
+
+            CreateSqlAndParametersForSelect(conn, obj, table, out sqlString, out parameters);
+            var results = conn.QuerySql(sqlString, parameters);
+
+            return results.AsEnumerable<T>();
+        }
+
+        #endregion Select Synchronous
+
+        private static void CreateSqlAndParametersForSelect(
+            SQLiteConnection conn, object obj, string table,
+            out string sqlString, out SQLiteParameter[] parameters)
         {
             if (obj == null) throw new ArgumentNullException("obj");
 
@@ -212,12 +394,9 @@ namespace SQLite.Tools
             if (!predicate.IsNullOrWhiteSpace())
                 sql.AppendFormat(" WHERE {0}", predicate);
 
-            var parameters = data.Select(x => x.param).ToArray();
-            var results = await conn.QuerySqlAsync(sql.ToString(), parameters);
-
-            return results.AsEnumerable<T>();
+            parameters = data.Select(x => x.param).ToArray();
+            sqlString = sql.ToString();
         }
-
 
         public static SQLiteColumn[] GetColumns(this SQLiteConnection conn, string table)
         {
