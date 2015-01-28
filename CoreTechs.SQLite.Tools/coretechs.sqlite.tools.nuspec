@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>CoreTechs.SQLite.Tools</id>
+        <version>0.1.0</version>
+        <title>CoreTechs SQLite Tools</title>
+        <authors>Ronnie Overby,Chris Cain</authors>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Simple tools designed to make using SQLite easier to use without going to a full-blown ORM.</description>
+        <releaseNotes>Initial Release</releaseNotes>
+        <copyright>Copyright 2015</copyright>
+        <dependencies>
+            <dependency id="CoreTechs.Common" version="13.0.3" />
+            <dependency id="System.Data.SQLite.Core" version="1.0.94.0" />
+            <dependency id="UniqueNamespace.SqlBuilder" version="2.0.2" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="bin\Release\CoreTechs.SQLite.Tools.dll" target="lib\CoreTechs.SQLite.Tools.dll" />
+    </files>
+</package>
