@@ -121,15 +121,20 @@ namespace CoreTechs.SQLite.Tools.Migrations
             var keep = up ? UpRegex : DownRegex;
             var noKeep = up ? DownRegex : UpRegex;
 
-            // remove down sql
+            // remove sql that shouldn't be kept
             sql = noKeep.Replace(sql, string.Empty);
 
             var matches = keep.Matches(sql);
-
-            foreach (Match match in matches)
+            foreach (var match in matches.Cast<Match>().OrderByDescending(x => x.Index))
             {
+                // iterating matches in reverse (from end of string to beginning)
+                // because we're mutating the string and match index/length properties
+                // become stale if we remove tags from left-most to right-most
+
                 var inner = match.Groups["sql"].Value;
                 sql = sql.Remove(match.Index, match.Length).Insert(match.Index, inner);
+
+                // removed keeper <TAG> and </TAG>
             }
 
             var incrementedSchemaVersion = schemaVersion + 1;
