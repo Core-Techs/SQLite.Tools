@@ -185,10 +185,10 @@ namespace CoreTechs.SQLite.Tools.Migrations
                            "Error TEXT)");
         }
 
-        private static readonly Regex UpRegex = new Regex("<UP>(?<sql>.*)<\\/UP>",
-            RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
+        private static readonly Regex UpRegex = new Regex(@"<UP>(?<sql>.*?)<\/UP>",
+            RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline);
 
-        private static readonly Regex DownRegex = new Regex("<DOWN>(?<sql>.*)<\\/DOWN>",
+        private static readonly Regex DownRegex = new Regex(@"<DOWN>(?<sql>.*?)<\/DOWN>",
             RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
 
         private string ExtractDownSql(string sql)
