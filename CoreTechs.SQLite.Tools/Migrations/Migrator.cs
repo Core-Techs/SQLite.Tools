@@ -11,7 +11,7 @@ using CoreTechs.Common.Database;
 namespace CoreTechs.SQLite.Tools.Migrations
 {
     /// <summary>
-    /// Executues migrations on a database.
+    /// Executes migrations on a database.
     /// </summary>
     public class Migrator
     {
